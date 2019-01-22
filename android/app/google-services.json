@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "678692854556",
+    "firebase_url": "https://proyectoautomatas-1fb7c.firebaseio.com",
+    "project_id": "proyectoautomatas-1fb7c",
+    "storage_bucket": "proyectoautomatas-1fb7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678692854556:android:c1bfe4da8d05e42c",
+        "android_client_info": {
+          "package_name": "com.damasofc.proyectoautomatas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678692854556-todcn4atflcc217ptig4cn1ulsp1vdd6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN0fpqsEUFaw0UNppKXy6H9g92VFbb3Q0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
