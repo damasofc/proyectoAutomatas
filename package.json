@@ -44,6 +44,7 @@
     "cacheDirectory": ".jest/cache"
   },
   "dependencies": {
+    "@ant-design/react-native": "^3.0.6",
     "react": "16.6.3",
     "react-native": "0.58.0-rc.2",
     "react-native-firebase": "^5.2.0"

@@ -2,11 +2,20 @@ import React from 'react';
 import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
 
 import firebase from 'react-native-firebase';
+import { Button, Provider, Toast, TabBar, Icon } from '@ant-design/react-native';
 
 export default class App extends React.Component {
   constructor(props: any) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedTab: 'redTab',
+    };
+  }
+
+  onChangeTab(tabName: any) {
+    this.setState({
+      selectedTab: tabName,
+    });
   }
 
   async componentDidMount() {
@@ -19,46 +28,52 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <ScrollView>
+      <Provider>
         <View style={styles.container}>
-          <Image source={require('./assets/ReactNativeFirebase.png')} style={[styles.logo]}/>
-          <Text style={styles.welcome}>
-            Welcome to {'\n'} React Native Firebase
-          </Text>
-          <Text style={styles.instructions}>
-            To get started, edit App.js
-          </Text>
-          {Platform.OS === 'ios' ? (
-            <Text style={styles.instructions}>
-              Press Cmd+R to reload,{'\n'}
-              Cmd+D or shake for dev menu
-            </Text>
-          ) : (
-            <Text style={styles.instructions}>
-              Double tap R on your keyboard to reload,{'\n'}
-              Cmd+M or shake for dev menu
-            </Text>
-          )}
-          <View style={styles.modules}>
-            <Text style={styles.modulesHeader}>The following Firebase modules are pre-installed:</Text>
-            {firebase.admob.nativeModuleExists && <Text style={styles.module}>admob()</Text>}
-            {firebase.analytics.nativeModuleExists && <Text style={styles.module}>analytics()</Text>}
-            {firebase.auth.nativeModuleExists && <Text style={styles.module}>auth()</Text>}
-            {firebase.config.nativeModuleExists && <Text style={styles.module}>config()</Text>}
-            {firebase.crashlytics.nativeModuleExists && <Text style={styles.module}>crashlytics()</Text>}
-            {firebase.database.nativeModuleExists && <Text style={styles.module}>database()</Text>}
-            {firebase.firestore.nativeModuleExists && <Text style={styles.module}>firestore()</Text>}
-            {firebase.functions.nativeModuleExists && <Text style={styles.module}>functions()</Text>}
-            {firebase.iid.nativeModuleExists && <Text style={styles.module}>iid()</Text>}
-            {firebase.invites.nativeModuleExists && <Text style={styles.module}>invites()</Text>}
-            {firebase.links.nativeModuleExists && <Text style={styles.module}>links()</Text>}
-            {firebase.messaging.nativeModuleExists && <Text style={styles.module}>messaging()</Text>}
-            {firebase.notifications.nativeModuleExists && <Text style={styles.module}>notifications()</Text>}
-            {firebase.perf.nativeModuleExists && <Text style={styles.module}>perf()</Text>}
-            {firebase.storage.nativeModuleExists && <Text style={styles.module}>storage()</Text>}
-          </View>
+        <TabBar
+        unselectedTintColor="#949494"
+        tintColor="#33A3F4"
+        barTintColor="#f5f5f5"
+      >
+        <TabBar.Item
+          title="Life"
+          icon={<Icon name="home" />}
+          selected={this.state.selectedTab === 'blueTab'}
+          onPress={() => this.onChangeTab('blueTab')}
+        >
+          <Text>Life Tab</Text>
+        </TabBar.Item>
+        <TabBar.Item
+          icon={<Icon name='ordered-list' />}
+          title="Koubei"
+          badge={2}
+          selected={this.state.selectedTab === 'redTab'}
+          onPress={() => this.onChangeTab('redTab')}
+        >
+          <Text>Life Tbau</Text>
+        </TabBar.Item>
+        <TabBar.Item
+          icon={<Icon name="like" />}
+          title="Friend"
+          selected={this.state.selectedTab === 'greenTab'}
+          onPress={() => this.onChangeTab('greenTab')}
+        >
+          <Text>FRiend Tab</Text>
+        </TabBar.Item>
+        <TabBar.Item
+          icon={<Icon name="user" />}
+          title="My"
+          selected={this.state.selectedTab === 'yellowTab'}
+          onPress={() => this.onChangeTab('yellowTab')}
+        >
+          <Text> Tab</Text>
+        </TabBar.Item>
+      </TabBar>
+          <Button onPress={() => Toast.info('This is a toast tips')}>
+            Start
+          </Button>
         </View>
-      </ScrollView>
+      </Provider>
     );
   }
 }
