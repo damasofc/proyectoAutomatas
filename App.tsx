@@ -4,8 +4,8 @@ import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-nativ
 import firebase from 'react-native-firebase';
 
 export default class App extends React.Component {
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
     this.state = {};
   }
 
