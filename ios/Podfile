@@ -26,4 +26,6 @@ target 'proyectoAutomatas' do
   pod 'Fabric', '~> 1.7.13'
   pod 'Crashlytics', '~> 3.10.9'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
 end

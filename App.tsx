@@ -1,10 +1,19 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Platform, Image, Text, View, ScrollView, Dimensions } from 'react-native';
+import Svg, {
+  Line,
+  Rect,
+  Circle
+} from 'react-native-svg';
 
 import firebase from 'react-native-firebase';
 import { Button, Provider, Toast, TabBar, Icon } from '@ant-design/react-native';
 
-export default class App extends React.Component {
+const { width, height } = Dimensions.get('window');
+type MyProps = {};
+
+type MyState = { selectedTab: String};
+export default class App extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -18,6 +27,15 @@ export default class App extends React.Component {
     });
   }
 
+  renderContent(pageText: any) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
+        {/* <SearchBar placeholder="Search" showCancelButton /> */}
+        <Text style={{ margin: 50 }}>{pageText}</Text>
+      </View>
+    );
+  }
+
   async componentDidMount() {
     // TODO: You: Do firebase things
     // const { user } = await firebase.auth().signInAnonymously();
@@ -28,9 +46,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Provider>
-        <View style={styles.container}>
-        <TabBar
+      <TabBar
         unselectedTintColor="#949494"
         tintColor="#33A3F4"
         barTintColor="#f5f5f5"
@@ -41,7 +57,22 @@ export default class App extends React.Component {
           selected={this.state.selectedTab === 'blueTab'}
           onPress={() => this.onChangeTab('blueTab')}
         >
-          <Text>Life Tab</Text>
+          <Svg height={height * 0.5} width={width * 0.5} viewBox="0 0 150 150">
+          <Line
+            x1="15"
+            y1="15"
+            x2="100"
+            y2="100"
+            stroke="red"
+            strokeWidth="2"
+          />
+           <Circle
+              cx="100"
+              cy="100"
+              r="15"
+              fill="pink"
+            />
+        </Svg>
         </TabBar.Item>
         <TabBar.Item
           icon={<Icon name='ordered-list' />}
@@ -50,7 +81,7 @@ export default class App extends React.Component {
           selected={this.state.selectedTab === 'redTab'}
           onPress={() => this.onChangeTab('redTab')}
         >
-          <Text>Life Tbau</Text>
+          {this.renderContent('Koubei Tab')}
         </TabBar.Item>
         <TabBar.Item
           icon={<Icon name="like" />}
@@ -58,7 +89,7 @@ export default class App extends React.Component {
           selected={this.state.selectedTab === 'greenTab'}
           onPress={() => this.onChangeTab('greenTab')}
         >
-          <Text>FRiend Tab</Text>
+          {this.renderContent('Friend Tab')}
         </TabBar.Item>
         <TabBar.Item
           icon={<Icon name="user" />}
@@ -66,14 +97,9 @@ export default class App extends React.Component {
           selected={this.state.selectedTab === 'yellowTab'}
           onPress={() => this.onChangeTab('yellowTab')}
         >
-          <Text> Tab</Text>
+          {this.renderContent('My Tab')}
         </TabBar.Item>
       </TabBar>
-          <Button onPress={() => Toast.info('This is a toast tips')}>
-            Start
-          </Button>
-        </View>
-      </Provider>
     );
   }
 }
