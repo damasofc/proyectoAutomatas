@@ -8,6 +8,7 @@ import Svg, {
 
 import firebase from 'react-native-firebase';
 import { Button, Provider, Toast, TabBar, Icon } from '@ant-design/react-native';
+import NuevoAutomata from './components/nuevoAutomata';
 
 const { width, height } = Dimensions.get('window');
 type MyProps = {};
@@ -81,7 +82,7 @@ export default class App extends React.Component<MyProps, MyState> {
           selected={this.state.selectedTab === 'redTab'}
           onPress={() => this.onChangeTab('redTab')}
         >
-          {this.renderContent('Koubei Tab')}
+          <NuevoAutomata/>
         </TabBar.Item>
         <TabBar.Item
           icon={<Icon name="like" />}
