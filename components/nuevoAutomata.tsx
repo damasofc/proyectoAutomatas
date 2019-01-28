@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Platform,
+   Image, Text, View, ScrollView, 
+   Dimensions, Picker } from 'react-native';
 import Svg, {
   Line,
   Rect,
@@ -14,10 +16,14 @@ import Transicion from '../models/transicion';
 
 type MyProps = {};
 
-type MyState = {};
+type MyState = {language: any, services: any};
 export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
+    this.state = {
+      language: "Java",
+      services: ['one','two']
+    };
   }
 
   componentDidMount(){
@@ -38,9 +44,24 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   }
 
   render() {
+    let numbersSt = this.state.services.map((s,i) => {
+      return <Picker.Item key={i} value={s} label={s} />
+    })
     return (
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
-            <Text style={{ margin: 50 }}>hola</Text>
+            <Text style={{ margin: 50 }}>Crear un Nuevo Automata:</Text>
+            <View style={{flex: 1, flexDirection: 'row',}}>
+              <Text>Estados: </Text>
+              <Picker
+                selectedValue={this.state.language}
+                style={{height: 50, width: 100}}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.setState({language: itemValue})
+                }>
+                {numbersSt}
+              </Picker>
+            
+            </View>
         </View>
     );
   }
