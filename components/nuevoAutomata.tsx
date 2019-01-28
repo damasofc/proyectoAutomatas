@@ -34,7 +34,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       x.estados.get(3).transiciones.set('1',new Transicion(x.estados.get(3),x.estados.get(2)));
       x.estados.get(2).transiciones.set('0',new Transicion(x.estados.get(2),x.estados.get(0)));
       x.estados.get(2).transiciones.set('1',new Transicion(x.estados.get(2),x.estados.get(3)));
-      console.log(x.evaluar("0011"));
+      console.log(x.evaluar("001111"));
   }
 
   render() {

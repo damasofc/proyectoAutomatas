@@ -5,19 +5,20 @@ export default class Automata {
         this.estados = new Map();
     }
 
-    getInitialState():Estado {
-        this.estados.forEach(element => {
-            if(element.esInicial)
-                return element;
+    getInitialState() {
+        var estado = null;
+        this.estados.forEach((elem:Estado, key:Number) => {
+            if(elem.esInicial)
+                estado = elem;
         });
-        return new Estado("null");
+        return estado;
     }
 
     evaluar(palabra: String): boolean{
         var x = 0;
         var state:any = this.getInitialState();
         var char = palabra.charAt(x);
-        while (char != null) {
+        while (char.length > 0 && state != null) {
             state = this.getNextState(state,char);
             if(state == null)
             {
@@ -26,7 +27,7 @@ export default class Automata {
             x++;
             char = palabra.charAt(x);
         }
-        if(state.esFinal){
+        if(state != null && state.esFinal){
             return true;
         }
         return false;
@@ -35,7 +36,7 @@ export default class Automata {
     getNextState(actual:Estado,char:String){
         var nxState = actual.transiciones.get(char);
         if(nxState != null){
-            return nxState;
+            return nxState.stEnd;
         }
         return null;
     }
