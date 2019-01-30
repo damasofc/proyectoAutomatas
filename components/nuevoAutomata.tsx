@@ -18,21 +18,40 @@ import ListState from './liststate';
 
 type MyProps = {};
 
-type MyState = {numbrStates: Number, alfabeto: Array<String>, alfabetoString: String};
+type MyState = {numbrStates: Number, alfabeto: Array<String>, 
+  alfabetoString: String,estadoIni:String,estados:Map<number,any>};
 export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      numbrStates: 1,
+      numbrStates: 2,
       alfabeto: [],
-      alfabetoString: ''
+      alfabetoString: '',
+      estadoIni: '',
+      estados: new Map()
     };
+    this.saveTransiciones=this.saveTransiciones.bind(this);
   }
 
   getListItems(){
     var x:Array<any> =  new Array();
     for (let index = 0; index < this.state.numbrStates; index++) {
-      x.push(<ListState key={"q"+index} title={"Q"+(index)} alfabeto={this.state.alfabeto} />);
+      x.push(<ListState id={index} guardarData={this.saveTransiciones} nmbrStates={this.state.numbrStates} key={"q"+index} title={"Q"+(index)} alfabeto={this.state.alfabeto} />);
+      
+    }
+    return x;
+  }
+
+  saveTransiciones(id:number,transiciones:Map<String,String>){
+    let st = this.state.estados;
+    st.set(id,transiciones);
+    this.setState({estados: st});
+  }
+
+  getEstados(){
+    var x:Array<any> =  new Array();
+    for (let index = 0; index < this.state.numbrStates; index++) {
+      x.push(<Picker.Item key={"q"+index} label={"Q"+(index)} value={"Q"+(index)} />);
       
     }
     return x;
@@ -90,6 +109,18 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
               />
             
             </View>
+            <View style={{flex: 1, flexDirection: 'row',}}>
+              <Text>Estado Inicial: </Text>
+              <Picker
+                selectedValue={this.state.estadoIni}
+                style={{height: 50, width: 100}}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.setState({estadoIni: itemValue})
+                }>
+                {this.getEstados()}
+              </Picker>
+            
+            </View>
             <View style={{flex: 1, flexDirection: 'column',}}>
               <Text style={styles.textB}>Estados: </Text>
               {this.getListItems()}
@@ -100,6 +131,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
                 color="#841584"
                 onPress={() => {
                   console.log(this.state.alfabeto);
+                  console.log(this.state.estados);
 
                 }}
               />

@@ -1,31 +1,53 @@
 import React from 'react';
-import { StyleSheet, Text, View,
+import { CheckBox } from 'react-native-elements'
+import { StyleSheet, Text, View,Picker, ScrollView,
     Button, Modal, TouchableHighlight, Alert } from 'react-native';
+import Transicion from '../models/transicion';
 
 
 type MyProps = {title:String, 
     alfabeto:Array<any>,
-    nmbrStates: Number};
+    id: number,
+    nmbrStates: Number,
+    guardarData: any};
 
-type MyState = {modalVisible: boolean};
+type MyState = {modalVisible: boolean,transiciones:Map<String,String>, isFinal:boolean};
 export default class ListState extends React.Component<MyProps, MyState> {
     constructor(props: any) {
       super(props);
       this.state = {
-          modalVisible: false
+          modalVisible: false,
+          transiciones: new Map(),
+          isFinal: false
       };
     }
 
     setModalVisible(visible:boolean) {
         this.setState({modalVisible: visible});
     }
+
     render(){
+        let statesAut = () => {
+            var x:Array<any> =  new Array();
+            for (let index = 0; index < this.props.nmbrStates; index++) {
+                x.push(<Picker.Item  key={"q"+index} label={"Q"+(index)} value={"Q"+index} />);    
+            }
+            return x;
+        }
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>{this.props.title+"   ------>"}</Text>
+                <CheckBox
+                    title='Es Final'
+                    checked={this.state.isFinal}
+                    onPress={() => this.setState({isFinal: !this.state.isFinal})}
+                />
                 <Button title="Transiciones"
                 color="#FF2D00"
-                onPress={() => {this.setModalVisible(true)}}
+                onPress={() => {
+                    this.setModalVisible(true);
+                    console.log(this.props.nmbrStates);
+                }}
                 />
 
                 <Modal
@@ -37,17 +59,37 @@ export default class ListState extends React.Component<MyProps, MyState> {
                     onRequestClose={() => {
                       Alert.alert('Modal has been closed.');
                     }}>
-                    <View style={{marginTop: 22}}>
-                      <View>
-                        <Text>Hello World!</Text>
+                    <View style={{marginTop: 22, flex: 1,flexDirection: 'column'}}>
+                        <View>
+                            <Text style={styles.title}>{"Transiciones de "+this.props.title}</Text>
+                        </View>
+                        <ScrollView style={{flex:1, flexDirection: 'column', margin:10}}>
+                        {this.props.alfabeto.map((v,i) => {
+                            return (
+                                    <View key={v+i} style={{flex:1, flexDirection: 'row'}}>
+                                        <Text style={styles.subTitle}>{v}</Text>
+                                        <Picker
+                                            selectedValue={this.state.transiciones.get(v)}
+                                            style={{height: 50, width: 100}}
+                                            onValueChange={(itemValue, itemIndex) => {
+                                                let x = this.state.transiciones;
+                                                x.set(v,itemValue);
+                                                this.setState({transiciones: x});
+                                            }}>
+                                            {statesAut()}
+                                        </Picker>
+                                    </View>
+                                )
+                        })}
+                        </ScrollView>
                 
-                        <TouchableHighlight
+                        <Button
+                            title="Hide Modal"
                           onPress={() => {
+                            this.props.guardarData(this.props.id,this.state.transiciones);
                             this.setModalVisible(!this.state.modalVisible);
                           }}>
-                          <Text>Hide Modal</Text>
-                        </TouchableHighlight>
-                      </View>
+                        </Button>
                     </View>
                 </Modal>
             </View>
@@ -61,6 +103,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         color: 'black'
+    },
+    subTitle: {
+        fontSize: 15,
+        textAlign: 'left',
+        color: 'black',
+        fontWeight: 'bold',
     },
     container: {
         flex: 1,
