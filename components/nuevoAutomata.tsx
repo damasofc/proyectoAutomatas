@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Platform,
    Image, Text, View, ScrollView, 
-   Dimensions, Picker, TextInput, Button } from 'react-native';
+   Dimensions, Picker, TextInput, Button, ToastAndroid } from 'react-native';
 import Svg, {
   Line,
   Rect,
@@ -19,7 +19,7 @@ import ListState from './liststate';
 type MyProps = {};
 
 type MyState = {numbrStates: Number, alfabeto: Array<String>, 
-  alfabetoString: String,estadoIni:String,estados:Map<number,any>};
+  alfabetoString: String,estadoIni:String,estados:Map<number,any>,estadosFinales:Array<any>};
 export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
@@ -27,7 +27,8 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       numbrStates: 2,
       alfabeto: [],
       alfabetoString: '',
-      estadoIni: '',
+      estadoIni: 'Q0',
+      estadosFinales: new Array(),
       estados: new Map()
     };
     this.saveTransiciones=this.saveTransiciones.bind(this);
@@ -42,10 +43,19 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
     return x;
   }
 
-  saveTransiciones(id:number,transiciones:Map<String,String>){
+  saveTransiciones(id:number,transiciones:Map<String,String>,isFinal:boolean){
     let st = this.state.estados;
     st.set(id,transiciones);
-    this.setState({estados: st});
+    if(isFinal){
+      let estadosFin = this.state.estadosFinales;
+      estadosFin[id] = true;
+      this.setState({estados: st, estadosFinales:estadosFin});
+    }
+    else{
+      let estadosFin = this.state.estadosFinales;
+      estadosFin[id] = false;
+      this.setState({estados: st, estadosFinales:estadosFin});
+    }
   }
 
   getEstados(){
@@ -55,6 +65,63 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       
     }
     return x;
+  }
+
+  hasFinalState(){
+    var res = false;
+    this.state.estadosFinales.forEach((v,i) => {
+      if(v === true){
+        res = true;
+      }
+    })
+    return res;
+  }
+
+  hasAlphabet(){
+    var res = false;
+    this.state.alfabeto.forEach((v,i) => {
+      if(v.length > 0){
+        res = true;
+      }
+    })
+    return res;
+  }
+
+  isInitialState(id:number){
+    var x = Number(this.state.estadoIni[1]);
+    if(id == x){
+      return true;
+    }
+    return false;
+  }
+
+  getIdFromName(estado:String){
+    var x = Number(estado[1]);
+    return x;
+  }
+
+  guardarAutomata(){
+    if(this.hasAlphabet() && this.hasFinalState()){
+      var x:Automata = new Automata();
+      this.state.estados.forEach((value:any, key:number) => {
+        x.estados.set(key,new Estado("Q"+key,this.state.estadosFinales[key],this.isInitialState(key)));
+      });
+      //guardar transiciones
+      this.state.estados.forEach((value:any, key:number) => {
+        value.forEach((valueVal:String, keyVal:String) => {
+          x.estados.get(key).transiciones.set(keyVal,new Transicion(x.estados.get(key),x.estados.get(this.getIdFromName(valueVal))));
+        })
+      });
+      ToastAndroid.show('Automata guardado', ToastAndroid.LONG);
+    }
+    else{
+      ToastAndroid.showWithGravity(
+        'Hace falta el alfabeto o seleccionar al menos un estado final',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+      
+    }
   }
 
   componentDidMount(){
@@ -130,9 +197,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
               <Button title="Crear"
                 color="#841584"
                 onPress={() => {
-                  console.log(this.state.alfabeto);
-                  console.log(this.state.estados);
-
+                  this.guardarAutomata();
                 }}
               />
             

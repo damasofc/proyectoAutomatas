@@ -20,27 +20,45 @@ export default class ListState extends React.Component<MyProps, MyState> {
           transiciones: new Map(),
           isFinal: false
       };
+      this.props.guardarData(this.props.id,this.state.transiciones,this.state.isFinal);
+    }
+
+    componentDidUpdate(prevProps:any){
+        if(prevProps.alfabeto !== this.props.alfabeto){
+            let st = this.state.transiciones;
+            this.props.alfabeto.forEach(v => {
+                if(v.length > 0){
+                    st.set(v,"Q0");
+                }
+            });
+            this.setState({transiciones: st});
+
+        }
     }
 
     setModalVisible(visible:boolean) {
         this.setState({modalVisible: visible});
     }
 
-    render(){
-        let statesAut = () => {
-            var x:Array<any> =  new Array();
+    statesAut(){
+        var x:Array<any> =  new Array();
             for (let index = 0; index < this.props.nmbrStates; index++) {
                 x.push(<Picker.Item  key={"q"+index} label={"Q"+(index)} value={"Q"+index} />);    
             }
-            return x;
-        }
+        return x;
+    }
+
+    render(){
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>{this.props.title+"   ------>"}</Text>
                 <CheckBox
                     title='Es Final'
                     checked={this.state.isFinal}
-                    onPress={() => this.setState({isFinal: !this.state.isFinal})}
+                    onPress={() => {
+                        this.setState({isFinal: !this.state.isFinal});
+                        this.props.guardarData(this.props.id,this.state.transiciones,!this.state.isFinal);
+                    }}
                 />
                 <Button title="Transiciones"
                 color="#FF2D00"
@@ -76,7 +94,7 @@ export default class ListState extends React.Component<MyProps, MyState> {
                                                 x.set(v,itemValue);
                                                 this.setState({transiciones: x});
                                             }}>
-                                            {statesAut()}
+                                            {this.statesAut()}
                                         </Picker>
                                     </View>
                                 )
@@ -86,7 +104,7 @@ export default class ListState extends React.Component<MyProps, MyState> {
                         <Button
                             title="Hide Modal"
                           onPress={() => {
-                            this.props.guardarData(this.props.id,this.state.transiciones);
+                            this.props.guardarData(this.props.id,this.state.transiciones,this.state.isFinal);
                             this.setModalVisible(!this.state.modalVisible);
                           }}>
                         </Button>
