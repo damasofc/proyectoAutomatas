@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Platform,
    Image, Text, View, ScrollView, 
    Dimensions, Picker, TextInput, Button, ToastAndroid } from 'react-native';
+import "json-circular-stringify";
 import Svg, {
   Line,
   Rect,
@@ -15,6 +16,7 @@ import Estado from '../models/estado';
 import Transicion from '../models/transicion';
 import NavBar from './navbar';
 import ListState from './liststate';
+import { saveAutomataFB, getAutomata } from '../server/api';
 
 type MyProps = {};
 
@@ -124,6 +126,11 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
     }
   }
 
+  saveToFirebase(automata: Automata){
+    console.log(automata);
+    // firebase.database().ref('automatas/3').set({x});
+  }
+
   componentDidMount(){
       var x:Automata = new Automata();
       x.estados.set(0,new Estado("q0",true,true));
@@ -138,7 +145,24 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       x.estados.get(3).transiciones.set('1',new Transicion(x.estados.get(3),x.estados.get(2)));
       x.estados.get(2).transiciones.set('0',new Transicion(x.estados.get(2),x.estados.get(0)));
       x.estados.get(2).transiciones.set('1',new Transicion(x.estados.get(2),x.estados.get(3)));
-      console.log(x.evaluar("001111"));
+      saveAutomataFB(x);
+      // getAutomata(0);
+
+      // firebase.database().ref('automatas').on("value",snapshot => {
+      //   console.log(snapshot.numChildren());
+      // })
+      //ASI LEO:
+      // firebase.database().ref('automatas/4').on("value",snapshot => {
+      //   x = new Automata(JSON.parse(snapshot.val()));
+      // })
+
+      // firebase.database().ref('automatas').on("value",snapshot => {
+      //   // let x = new Array(JSON.parse(snapshot.val()));
+      //   // console.log(snapshot.val());
+      //   snapshot.val().forEach((element, i) => {
+      //     console.log(i);
+      //   });
+      // })
   }
 
   render() {

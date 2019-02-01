@@ -1,8 +1,12 @@
 import Estado from './estado';
 export default class Automata {
     estados:Map<Number,Estado>;
-    constructor() {
-        this.estados = new Map();
+    constructor(obj: any) {
+        if(obj != null){
+            this.estados = new Map(obj.estados._mapData);
+        }else{
+            this.estados = new Map();
+        }
     }
 
     getInitialState() {
