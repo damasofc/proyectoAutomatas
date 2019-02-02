@@ -9,6 +9,7 @@ import Svg, {
 import firebase from 'react-native-firebase';
 import { Button, Provider, Toast, TabBar, Icon } from '@ant-design/react-native';
 import NuevoAutomata from './components/nuevoAutomata';
+import ListaAutomatas from './components/listaAutomatas';
 
 const { width, height } = Dimensions.get('window');
 type MyProps = {};
@@ -58,22 +59,7 @@ export default class App extends React.Component<MyProps, MyState> {
           selected={this.state.selectedTab === 'blueTab'}
           onPress={() => this.onChangeTab('blueTab')}
         >
-          <Svg height={height * 0.5} width={width * 0.5} viewBox="0 0 150 150">
-          <Line
-            x1="15"
-            y1="15"
-            x2="100"
-            y2="100"
-            stroke="red"
-            strokeWidth="2"
-          />
-           <Circle
-              cx="100"
-              cy="100"
-              r="15"
-              fill="pink"
-            />
-        </Svg>
+          <ListaAutomatas />
         </TabBar.Item>
         <TabBar.Item
           icon={<Icon name='ordered-list' />}
@@ -90,7 +76,22 @@ export default class App extends React.Component<MyProps, MyState> {
           selected={this.state.selectedTab === 'greenTab'}
           onPress={() => this.onChangeTab('greenTab')}
         >
-          {this.renderContent('Friend Tab')}
+          <Svg height={height * 0.5} width={width * 0.5} viewBox="0 0 150 150">
+          <Line
+            x1="15"
+            y1="15"
+            x2="100"
+            y2="100"
+            stroke="red"
+            strokeWidth="2"
+          />
+           <Circle
+              cx="100"
+              cy="100"
+              r="15"
+              fill="pink"
+            />
+            </Svg>
         </TabBar.Item>
         <TabBar.Item
           icon={<Icon name="user" />}
