@@ -114,6 +114,9 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
           x.estados.get(key).transiciones.set(keyVal,new Transicion(x.estados.get(key),x.estados.get(this.getIdFromName(valueVal))));
         })
       });
+      saveAutomataFB(x);
+      // console.log(x.evaluar("000001"));
+      // console.log(x.evaluar("100001"));
       ToastAndroid.show('Automata guardado', ToastAndroid.LONG);
     }
     else{
@@ -127,26 +130,14 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   }
 
   saveToFirebase(automata: Automata){
-    console.log(automata);
-    // firebase.database().ref('automatas/3').set({x});
+    saveAutomataFB(automata);
   }
 
   componentDidMount(){
-      var x:Automata = new Automata();
-      x.estados.set(0,new Estado("q0",true,true));
-      x.estados.set(1,new Estado("q1"));
-      x.estados.set(2,new Estado("q2"));
-      x.estados.set(3,new Estado("q3"));
-      x.estados.get(0).transiciones.set('1',new Transicion(x.estados.get(0),x.estados.get(1)));
-      x.estados.get(0).transiciones.set('0',new Transicion(x.estados.get(0),x.estados.get(2)));
-      x.estados.get(1).transiciones.set('1',new Transicion(x.estados.get(1),x.estados.get(0)));
-      x.estados.get(1).transiciones.set('0',new Transicion(x.estados.get(1),x.estados.get(3)));
-      x.estados.get(3).transiciones.set('0',new Transicion(x.estados.get(3),x.estados.get(1)));
-      x.estados.get(3).transiciones.set('1',new Transicion(x.estados.get(3),x.estados.get(2)));
-      x.estados.get(2).transiciones.set('0',new Transicion(x.estados.get(2),x.estados.get(0)));
-      x.estados.get(2).transiciones.set('1',new Transicion(x.estados.get(2),x.estados.get(3)));
-      saveAutomataFB(x);
-      // getAutomata(0);
+      getAutomata(11,(x => {
+        console.log(x);
+        console.log(x.evaluar("0011"));
+      }));
 
       // firebase.database().ref('automatas').on("value",snapshot => {
       //   console.log(snapshot.numChildren());
