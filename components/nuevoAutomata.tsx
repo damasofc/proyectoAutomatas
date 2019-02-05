@@ -20,7 +20,7 @@ import { saveAutomataFB, getAutomata } from '../server/api';
 
 type MyProps = {};
 
-type MyState = {numbrStates: Number, alfabeto: Array<String>, 
+type MyState = {numbrStates: Number, alfabeto: Array<String>,automataName:String, 
   alfabetoString: String,estadoIni:String,estados:Map<number,any>,estadosFinales:Array<any>};
 export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   constructor(props: any) {
@@ -103,10 +103,10 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   }
 
   guardarAutomata(){
-    if(this.hasAlphabet() && this.hasFinalState()){
-      var x:Automata = new Automata();
+    if(this.hasAlphabet() && this.hasFinalState() && this.state.automataName.length > 0){
+      var x:Automata = new Automata(null,this.state.automataName);
       this.state.estados.forEach((value:any, key:number) => {
-        x.estados.set(key,new Estado("Q"+key,this.state.estadosFinales[key],this.isInitialState(key)));
+        x.estados.set(key,new Estado(null,"Q"+key,this.state.estadosFinales[key],this.isInitialState(key)));
       });
       //guardar transiciones
       this.state.estados.forEach((value:any, key:number) => {
@@ -134,10 +134,6 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   }
 
   componentDidMount(){
-      getAutomata(11,(x => {
-        console.log(x);
-        console.log(x.evaluar("0011"));
-      }));
 
       // firebase.database().ref('automatas').on("value",snapshot => {
       //   console.log(snapshot.numChildren());
@@ -164,6 +160,20 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
         <View style={{flex:1}}>
             <NavBar title={"Crear Nuevo Automata"}/>
             <ScrollView style={styles.container}>
+            <View style={{flex: 1, flexDirection: 'row',}}>
+              <Text>Nombre identificador del Automata: </Text>
+              <TextInput
+                selectedValue={this.state.automataName}
+                placeholder="Escriba el nombre del Automata"
+                onChangeText={(text:String) => {
+                  this.setState({
+                    automataName:text
+                  });
+                }}
+                value={this.state.automataName}
+              />
+            
+            </View>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Text>Estados: </Text>
               <Picker
@@ -212,7 +222,11 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
               <Button title="Crear"
                 color="#841584"
                 onPress={() => {
-                  this.guardarAutomata();
+                  // this.guardarAutomata();
+                  getAutomata(0,(x => {
+                    console.log(x);
+                    console.log(x.evaluar("0011"));
+                  }));
                 }}
               />
             

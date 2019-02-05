@@ -8,6 +8,7 @@
     "@types/react-native": "^0.57.31",
     "@types/react-test-renderer": "^16.0.3",
     "babel-jest": "23.6.0",
+    "babel-preset-react-native": "^2.1.0",
     "fs-extra": "^6.0.1",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "0.49.2",

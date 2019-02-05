@@ -1,11 +1,27 @@
 import Estado from './estado';
+import {parse, stringify} from 'flatted/esm';
+import { objectToMap } from '../server/api';
 export default class Automata {
+    idName: String
     estados:Map<Number,Estado>;
-    constructor(obj: any) {
+    constructor(obj: any,name:String = '') {
         if(obj != null){
-            this.estados = new Map(obj.estados._mapData);
+            this.idName = obj.idName;
+            this.estados = new Map();
+            for (let index = 0; index < Object.keys(obj.estados).length; index++) {
+                let obej = obj.estados[index];
+                this.estados.set(index,new Estado(
+                    obej.nombre,obej.esFinal,obej.esInicial));
+            }
+            for (let index = 0; index < Object.keys(obj.estados).length; index++) {
+                for (let m = 0; m < Object.keys(obj.estados[index].transiciones).length; index++){
+                    this.estados.get(index)
+
+                }
+            }
         }else{
             this.estados = new Map();
+            this.idName = name
         }
     }
 
@@ -16,6 +32,22 @@ export default class Automata {
                 estado = elem;
         });
         return estado;
+    }
+
+    convertAutomata2String(){
+        let lo = {
+            idName: this.idName,
+            estados: this.convertStates2Json(this.estados)
+        }
+        return stringify(lo);
+    }
+
+    convertStates2Json(m:Map<any,any>){
+        let lo = {}
+        for(let[k,v] of m) {
+            lo[k] = v.convertEstado2Json();
+        }
+        return lo;
     }
 
     evaluar(palabra: String): boolean{
