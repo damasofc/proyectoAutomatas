@@ -31,7 +31,8 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       alfabetoString: '',
       estadoIni: 'Q0',
       estadosFinales: new Array(),
-      estados: new Map()
+      estados: new Map(),
+      automataName: ''
     };
     this.saveTransiciones=this.saveTransiciones.bind(this);
   }
@@ -106,7 +107,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
     if(this.hasAlphabet() && this.hasFinalState() && this.state.automataName.length > 0){
       var x:Automata = new Automata(null,this.state.automataName);
       this.state.estados.forEach((value:any, key:number) => {
-        x.estados.set(key,new Estado(null,"Q"+key,this.state.estadosFinales[key],this.isInitialState(key)));
+        x.estados.set(key,new Estado(key,this.state.estadosFinales[key],this.isInitialState(key)));
       });
       //guardar transiciones
       this.state.estados.forEach((value:any, key:number) => {
@@ -121,7 +122,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
     }
     else{
       ToastAndroid.showWithGravity(
-        'Hace falta el alfabeto o seleccionar al menos un estado final',
+        'Hace falta el alfabeto, el nombre del automata o seleccionar al menos un estado final',
         ToastAndroid.LONG,
         ToastAndroid.CENTER,
       );
@@ -222,11 +223,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
               <Button title="Crear"
                 color="#841584"
                 onPress={() => {
-                  // this.guardarAutomata();
-                  getAutomata(0,(x => {
-                    console.log(x);
-                    console.log(x.evaluar("0011"));
-                  }));
+                  this.guardarAutomata();
                 }}
               />
             

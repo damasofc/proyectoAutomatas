@@ -1,6 +1,6 @@
 import Estado from './estado';
-import {parse, stringify} from 'flatted/esm';
 import { objectToMap } from '../server/api';
+import Transicion from './transicion';
 export default class Automata {
     idName: String
     estados:Map<Number,Estado>;
@@ -8,20 +8,28 @@ export default class Automata {
         if(obj != null){
             this.idName = obj.idName;
             this.estados = new Map();
-            for (let index = 0; index < Object.keys(obj.estados).length; index++) {
-                let obej = obj.estados[index];
-                this.estados.set(index,new Estado(
-                    obej.nombre,obej.esFinal,obej.esInicial));
-            }
-            for (let index = 0; index < Object.keys(obj.estados).length; index++) {
-                for (let m = 0; m < Object.keys(obj.estados[index].transiciones).length; index++){
-                    this.estados.get(index)
-
-                }
-            }
+            this.createStatesFromData(obj);
+            this.createTransitions(obj);
         }else{
             this.estados = new Map();
             this.idName = name
+        }
+    }
+
+    createStatesFromData(data:any){
+        for (let index = 0; index < data.estados.length; index++) {
+            let obej = data.estados[index];
+            this.estados.set(obej.nombre,new Estado(obej.nombre,obej.esFinal,obej.esInicial));
+        }
+    }
+
+    createTransitions(data:any){
+        for (let index = 0; index < data.estados.length; index++) {
+            let obej = data.estados[index];
+            for(let m = 0; m < obej.transiciones.length;m++){
+                let transi = obej.transiciones[m];
+                this.estados.get(obej.nombre).transiciones.set(transi.val,new Transicion(this.estados.get(transi.init),this.estados.get(transi.end)));
+            }
         }
     }
 
@@ -39,11 +47,11 @@ export default class Automata {
             idName: this.idName,
             estados: this.convertStates2Json(this.estados)
         }
-        return stringify(lo);
+        return JSON.stringify(lo);
     }
 
     convertStates2Json(m:Map<any,any>){
-        let lo = {}
+        let lo = []
         for(let[k,v] of m) {
             lo[k] = v.convertEstado2Json();
         }
@@ -56,6 +64,7 @@ export default class Automata {
         var char = palabra.charAt(x);
         while (char.length > 0 && state != null) {
             state = this.getNextState(state,char);
+            console.log(char+" -----> "+state.idNombre);
             if(state == null)
             {
                 return false;

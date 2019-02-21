@@ -4,37 +4,37 @@ import {parse, stringify} from 'flatted/esm';
 export default class Estado {
     esFinal:boolean;
     esInicial:boolean;
-    nombre:String;
+    idNombre:number;
     transiciones:Map<String,Transicion>;
-    constructor(nombre:String = '',fin = false,ini = false) {
-            this.nombre = nombre;
+    constructor(idnombre:number = 0,fin = false,ini = false) {
+            this.idNombre = idnombre;
             this.esFinal = fin;
             this.esInicial = ini;
             this.transiciones = new Map();
     }
 
-    setTransiciones(obj:any){
-        this.transiciones = new Map(obj);
-    }
-
-    convertEstado2String(){
-        let lo = {
-            nombre: this.nombre,
-            esFinal: this.esFinal,
-            esInicial: this.esInicial,
-            transiciones: mapToObjectRec(this.transiciones)
-        }
-        return stringify(lo);
-
-    }
     convertEstado2Json(){
         let lo = {
-            nombre: this.nombre,
+            nombre: this.idNombre,
             esFinal: this.esFinal,
             esInicial: this.esInicial,
-            transiciones: mapToObjectRec(this.transiciones)
+            transiciones: this.convertTransiciones(this.transiciones)
         }
         return lo;
 
+    }
+
+    convertTransiciones(m:Map<any,any>){
+        let lo = []
+        let index = 0;
+        for(let[k,v] of m) {
+            lo[index] = {
+                val: k,
+                init: v.stStart.idNombre,
+                end: v.stEnd.idNombre
+            }
+            index++;
+        }
+        return lo;
     }
 };
