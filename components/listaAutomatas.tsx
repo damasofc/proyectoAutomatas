@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Platform,
    Image, Text, View, ScrollView, 
-   Dimensions, Picker, TextInput, Button, ToastAndroid } from 'react-native';
+   Dimensions, Picker, TextInput, Button, ToastAndroid, Modal } from 'react-native';
 import "json-circular-stringify";
 import Svg, {
   Line,
@@ -12,24 +12,35 @@ import Svg, {
 import firebase from 'react-native-firebase';
 
 import NavBar from './navbar';
-import { saveAutomataFB, getAutomata } from '../server/api';
+import { saveAutomataFB, getAutomata, getAutomatasList } from '../server/api';
+import ItemList from './itemListAutomata';
 
 type MyProps = {};
 
-type MyState = {};
+type MyState = {automatas: Array<any>,modalVisible:boolean};
 export default class ListaAutomatas extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
     this.state = {
-
+      automatas: [],
+      modalVisible:false,
     };
 
   }
 
+  setModalVisible(visible:boolean) {
+    this.setState({modalVisible: visible});
+  }
 
 
   componentDidMount(){
-      
+      getAutomatasList((data:any) => {
+        this.setState({
+          automatas: data
+        })
+      })
+
+
   }
 
   render() {
@@ -37,8 +48,27 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
         <View style={{flex:1}}>
             <NavBar title={"Lista de Automatas"}/>
             <ScrollView style={styles.container}>
+            {this.state.automatas.map(val => {
+              return(<ItemList id={val.id} key={val.id} name={val.name} tipo={"s"}/>)
+            })}
             </ScrollView>
+          <Modal transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => { console.log("Sali"); } }>
+              <View style={{
+                 flex: 1,
+                 flexDirection: 'column',
+                 justifyContent: 'center',
+                 alignItems: 'center'}}>
+              <View style={{
+                   width: 300,
+                   height: 300}}>
+              ...
+              </View>
+            </View>
+          </Modal>
         </View>
+
     );
   }
 }
@@ -46,7 +76,7 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin:10
+    margin:5
   },
   textB: {
     fontWeight: 'bold',
