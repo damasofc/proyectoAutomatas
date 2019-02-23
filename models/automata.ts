@@ -1,5 +1,4 @@
 import Estado from './estado';
-import { objectToMap } from '../server/api';
 import Transicion from './transicion';
 export default class Automata {
     idName: String
@@ -63,10 +62,11 @@ export default class Automata {
         var state:any = this.getInitialState();
         var char = palabra.charAt(x);
         while (char.length > 0 && state != null) {
+            state = this.getNextState(state,char);
             if(state == null)
             {
                 return false;
-            }
+            }7
             x++;
             char = palabra.charAt(x);
         }

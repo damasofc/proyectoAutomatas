@@ -57,7 +57,7 @@ export default class ItemList extends React.Component<MyProps, MyState> {
     return (
         <View style={styles.container}>
           <View style={styles.container}>
-            <Text style={styles.number}>{this.props.id + "."}</Text>
+            <Text style={styles.number}>{(this.props.id+1) + "."}</Text>
             <Text style={styles.name}>{this.props.name}</Text>
           </View>
           <View>

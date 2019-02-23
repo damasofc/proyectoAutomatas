@@ -54,7 +54,7 @@ export default class App extends React.Component<MyProps, MyState> {
         barTintColor="#f5f5f5"
       >
         <TabBar.Item
-          title="Life"
+          title="Automatas"
           icon={<Icon name="home" />}
           selected={this.state.selectedTab === 'blueTab'}
           onPress={() => this.onChangeTab('blueTab')}
@@ -63,8 +63,7 @@ export default class App extends React.Component<MyProps, MyState> {
         </TabBar.Item>
         <TabBar.Item
           icon={<Icon name='ordered-list' />}
-          title="Koubei"
-          badge={2}
+          title="Crear"
           selected={this.state.selectedTab === 'redTab'}
           onPress={() => this.onChangeTab('redTab')}
         >

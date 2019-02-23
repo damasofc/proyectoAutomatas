@@ -30,7 +30,7 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
   componentDidMount(){
       getAutomatasList((data:any) => {
         this.setState({
-          automatas: data
+          automatas: data.reverse()
         })
       })
 
@@ -42,7 +42,7 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
         <View style={{flex:1}}>
             <NavBar title={"Lista de Automatas"}/>
             <ScrollView style={styles.container}>
-            {this.state.automatas.map(val => {
+            {this.state.automatas.map((val,i) => {
               return(<ItemList id={val.id} key={val.id} name={val.name} tipo={"s"}/>)
             })}
             </ScrollView>
