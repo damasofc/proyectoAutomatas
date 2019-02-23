@@ -50,6 +50,7 @@
     "flatted": "^2.0.0",
     "json-circular-stringify": "0.0.1",
     "react": "16.6.3",
+    "react-dom": "^16.8.3",
     "react-native": "0.58.0-rc.2",
     "react-native-elements": "^1.0.0",
     "react-native-firebase": "^5.2.0",

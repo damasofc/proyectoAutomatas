@@ -1,16 +1,18 @@
 import Transicion from './transicion';
-import { mapToObjectRec, objectToMap } from '../server/api';
-import {parse, stringify} from 'flatted/esm';
 export default class Estado {
     esFinal:boolean;
     esInicial:boolean;
     idNombre:number;
     transiciones:Map<String,Transicion>;
+    posX:number;
+    posY:number;
     constructor(idnombre:number = 0,fin = false,ini = false) {
             this.idNombre = idnombre;
             this.esFinal = fin;
             this.esInicial = ini;
             this.transiciones = new Map();
+            this.posX = 0;
+            this.posY = 0;
     }
 
     convertEstado2Json(){

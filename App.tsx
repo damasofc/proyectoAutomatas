@@ -19,7 +19,7 @@ export default class App extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      selectedTab: 'redTab',
+      selectedTab: 'blueTab',
     };
   }
 
