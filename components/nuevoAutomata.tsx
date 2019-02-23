@@ -134,25 +134,6 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
     saveAutomataFB(automata);
   }
 
-  componentDidMount(){
-
-      // firebase.database().ref('automatas').on("value",snapshot => {
-      //   console.log(snapshot.numChildren());
-      // })
-      //ASI LEO:
-      // firebase.database().ref('automatas/4').on("value",snapshot => {
-      //   x = new Automata(JSON.parse(snapshot.val()));
-      // })
-
-      // firebase.database().ref('automatas').on("value",snapshot => {
-      //   // let x = new Array(JSON.parse(snapshot.val()));
-      //   // console.log(snapshot.val());
-      //   snapshot.val().forEach((element, i) => {
-      //     console.log(i);
-      //   });
-      // })
-  }
-
   render() {
     let numbersSt = "1 2 3 4 5 6 7 8 9 10".split(' ').map((s,i) => {
       return <Picker.Item key={i} value={s} label={s} />

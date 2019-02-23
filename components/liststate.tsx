@@ -28,12 +28,22 @@ export default class ListState extends React.Component<MyProps, MyState> {
             let st = this.state.transiciones;
             this.props.alfabeto.forEach(v => {
                 if(v.length > 0){
-                    st.set(v,"Q0");
+                    st.set(v,this.props.title);
                 }
             });
             this.setState({transiciones: st});
 
         }
+    }
+
+    componentDidMount(){
+        let st = this.state.transiciones;
+        this.props.alfabeto.forEach(v => {
+            if(v.length > 0){
+                st.set(v,this.props.title);
+            }
+        });
+        this.setState({transiciones: st});
     }
 
     setModalVisible(visible:boolean) {
