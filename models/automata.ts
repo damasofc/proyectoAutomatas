@@ -63,8 +63,6 @@ export default class Automata {
         var state:any = this.getInitialState();
         var char = palabra.charAt(x);
         while (char.length > 0 && state != null) {
-            state = this.getNextState(state,char);
-            console.log(char+" -----> "+state.idNombre);
             if(state == null)
             {
                 return false;

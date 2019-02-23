@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, Platform,
-   Image, Text, View, ScrollView, 
-   Dimensions, Picker, TextInput, Button, ToastAndroid } from 'react-native';
+   Image, Text, View, ScrollView, TouchableOpacity,
+   Dimensions, Picker, TextInput, Button, ToastAndroid} from 'react-native';
+import Modal from "react-native-modal";
+import Automata from '../models/automata';
+import { getAutomata } from '../server/api';
 
 type MyProps = {
     id:number,
@@ -9,16 +12,41 @@ type MyProps = {
     tipo:string
 };
 
-type MyState = {};
+type MyState = {modalVisible:boolean,automat:any,palabra:string};
 export default class ItemList extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
     this.state = {
-
+      modalVisible: false,
+      automat: null,
+      palabra: ''
     };
-
+    this.setModalVisible = this.setModalVisible.bind(this);
+    this.evaluarAutomata = this.evaluarAutomata.bind(this);
   }
 
+  setModalVisible(visible:boolean) {
+    this.setState({modalVisible: visible});
+  }
+
+  evaluarAutomata(){
+    if(this.state.automat == null){
+      getAutomata(this.props.id,(data: any) => {
+        this.setState({automat: data});
+        if(this.state.automat.evaluar(this.state.palabra)){
+          ToastAndroid.show("Palabara Aceptada!!",ToastAndroid.LONG);
+        }else{
+          ToastAndroid.show("Palabara NO Aceptada!!",ToastAndroid.LONG);
+        }
+      })
+    }else{
+      if(this.state.automat.evaluar(this.state.palabra)){
+        ToastAndroid.show("Palabara Aceptada!!",ToastAndroid.LONG);
+      }else{
+        ToastAndroid.show("Palabara NO Aceptada!!",ToastAndroid.LONG);
+      }
+    }
+  }
 
 
   componentDidMount(){
@@ -36,16 +64,46 @@ export default class ItemList extends React.Component<MyProps, MyState> {
             <Button title="Mostrar"
                 color="#841421"
                 onPress={() => {
-                  
+
                 }}
             />
             <Button title="Evaluar"
                 color="#008000"
                 onPress={() => {
-                  
+                  this.setModalVisible(true);
                 }}
             />
           </View>
+          <Modal
+            isVisible={this.state.modalVisible}
+            onRequestClose={() => { console.log("Sali"); } }>
+              <View style={{
+                 flex: 1,
+                 flexDirection: 'column',
+                 justifyContent: 'center',
+                 alignItems: 'center'}}>
+
+              <View style={{
+                  justifyContent: 'center',
+                  backgroundColor: 'white',
+                   width: 300,
+                   height: 300}}>
+                  <Text>Escriba la Palabra: </Text>
+                  <TextInput
+                    selectedValue={this.state.palabra}
+                    placeholder="Escriba la palabra a evaluar"
+                    onChangeText={(text:string) => {
+                      this.setState({
+                        palabra:text
+                      });
+                    }}
+                    value={this.state.palabra}
+                  />
+                  <Button title={"Evaluar"} onPress={() =>this.evaluarAutomata()} />
+                  <Button title={"Cerrar"} onPress={() =>this.setModalVisible(false)} />
+              </View>
+            </View>
+          </Modal>
         </View>
     );
   }

@@ -53,6 +53,7 @@
     "react-native": "0.58.0-rc.2",
     "react-native-elements": "^1.0.0",
     "react-native-firebase": "^5.2.0",
+    "react-native-modal": "^7.0.2",
     "react-native-svg": "^9.0.3",
     "react-native-vector-icons": "^6.2.0"
   }

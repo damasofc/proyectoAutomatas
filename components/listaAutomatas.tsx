@@ -17,21 +17,15 @@ import ItemList from './itemListAutomata';
 
 type MyProps = {};
 
-type MyState = {automatas: Array<any>,modalVisible:boolean};
+type MyState = {automatas: Array<any>};
 export default class ListaAutomatas extends React.Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      automatas: [],
-      modalVisible:false,
+      automatas: []
     };
 
   }
-
-  setModalVisible(visible:boolean) {
-    this.setState({modalVisible: visible});
-  }
-
 
   componentDidMount(){
       getAutomatasList((data:any) => {
@@ -52,21 +46,6 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
               return(<ItemList id={val.id} key={val.id} name={val.name} tipo={"s"}/>)
             })}
             </ScrollView>
-          <Modal transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => { console.log("Sali"); } }>
-              <View style={{
-                 flex: 1,
-                 flexDirection: 'column',
-                 justifyContent: 'center',
-                 alignItems: 'center'}}>
-              <View style={{
-                   width: 300,
-                   height: 300}}>
-              ...
-              </View>
-            </View>
-          </Modal>
         </View>
 
     );
