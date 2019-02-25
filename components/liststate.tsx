@@ -9,7 +9,7 @@ type MyProps = {title:String,
     alfabeto:Array<any>,
     id: number,
     nmbrStates: Number,
-    tipoAuto: String,
+    tipoAuto: number,
     guardarData: any};
 
 type MyState = {modalVisible: boolean,transiciones:Map<String,Array<String>>, isFinal:boolean};
@@ -21,6 +21,7 @@ export default class ListState extends React.Component<MyProps, MyState> {
           transiciones: new Map<String,Array<String>>(),
           isFinal: false
       };
+      this.addTransicion = this.addTransicion.bind(this);
       this.props.guardarData(this.props.id,this.state.transiciones,this.state.isFinal);
     }
     componentDidUpdate(prevProps:any){
@@ -60,6 +61,19 @@ export default class ListState extends React.Component<MyProps, MyState> {
                 x.push(<Picker.Item  key={"q"+index} label={"Q"+(index)} value={"Q"+index} />);    
             }
         return x;
+    }
+
+    addTransicion(v:any){
+        console.log("hol desde add transicion");
+        let temp = this.state.transiciones;
+        if(temp != null){
+            let temp2 = temp.get(v);
+            if(temp2 != null){
+                temp2.push(this.props.title);
+                temp.set(v,temp2);
+            }
+        }
+        this.setState({transiciones:temp});
     }
 
     getTransicionesOf(v:any){
@@ -123,7 +137,14 @@ export default class ListState extends React.Component<MyProps, MyState> {
                             return (
                                     <View key={v+i} style={{flex:1, flexDirection: 'row'}}>
                                         <Text style={styles.subTitle}>{v}</Text>
-                                        {this.getTransicionesOf(v)}
+                                        <View style={{flex:1, flexDirection: 'column'}}>
+                                            {this.getTransicionesOf(v)}
+                                            {this.props.tipoAuto > 0? <Button
+                                            onPress={() => this.addTransicion(v)}
+                                            title={"Add - "+v}
+                                            color="#00FF00"
+                                            />:null}
+                                        </View>
                                     </View>
                                 )
                         })}

@@ -69,8 +69,9 @@ export default class ItemList extends React.Component<MyProps, MyState> {
       return "DFA";
     }else if(this.props.tipo == 1){
       return "NFA";
+    }else{
+      return "NFA-e";
     }
-    return "NFA-e";
   }
 
   componentDidMount(){

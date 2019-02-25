@@ -41,7 +41,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   getListItems(){
     var x:Array<any> =  new Array();
     for (let index = 0; index < this.state.numbrStates; index++) {
-      x.push(<ListState id={index} tipoAuto={this.state.tipoAutomata} guardarData={this.saveTransiciones} nmbrStates={this.state.numbrStates} key={"q"+index} title={"Q"+(index)} alfabeto={this.state.alfabeto} />);
+      x.push(<ListState id={index} tipoAuto= {this.state.tipoAutomata} guardarData={this.saveTransiciones} nmbrStates={this.state.numbrStates} key={"q"+index} title={"Q"+(index)} alfabeto={this.state.alfabeto} />);
       
     }
     return x;
@@ -97,18 +97,9 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
     return x;
   }
 
-  getTipVal(){
-    if(this.state.tipoAutomata == "DFA"){
-      return 0;
-    }else if(this.state.tipoAutomata == "NFA"){
-      return 1;
-    }
-    return 2;
-  }
-
   guardarAutomata(){
     if(this.hasAlphabet() && this.hasFinalState() && this.state.automataName.length > 0){
-      var x:Automata = new Automata(null,this.state.automataName,this.getTipVal());
+      var x:Automata = new Automata(null,this.state.automataName,this.state.tipoAutomata);
       this.state.estados.forEach((value:any, key:number) => {
         x.estados.set(key,new Estado(key,this.state.estadosFinales[key],this.isInitialState(key)));
       });
@@ -133,49 +124,6 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       );
       
     }
-  }
-
-  prueba(){
-    var automata:Automata = new Automata(null,"pruebaNFA",1);
-    automata.estados.set(1,new Estado(1,false,true));
-    automata.estados.set(2,new Estado(2,false,false));
-    automata.estados.set(3,new Estado(3,false,false));
-    automata.estados.set(4,new Estado(4,true,false));
-    //transiciones q1 con 0
-    let transi1 = new Array<Transicion>();
-    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(1)));
-    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(2)));
-    automata.estados.get(1).transiciones.set("0",transi1);
-    //transiciones q1 con 1
-    transi1 = new Array<Transicion>();
-    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(1)));
-    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(3)));
-    automata.estados.get(1).transiciones.set("1",transi1);
-
-    //transiciones q2 
-    transi1 = new Array<Transicion>();
-    transi1.push(new Transicion(automata.estados.get(2),automata.estados.get(4)));
-    automata.estados.get(2).transiciones.set("0",transi1);
-    transi1 = new Array<Transicion>();
-    transi1.push(new Transicion(automata.estados.get(2),automata.estados.get(2)));
-    automata.estados.get(2).transiciones.set("1",transi1);
-
-    //transiciones q3 
-    transi1 = new Array<Transicion>();
-    transi1.push(new Transicion(automata.estados.get(3),automata.estados.get(3)));
-    automata.estados.get(3).transiciones.set("0",transi1);
-    transi1 = new Array<Transicion>();
-    transi1.push(new Transicion(automata.estados.get(3),automata.estados.get(4)));
-    automata.estados.get(3).transiciones.set("1",transi1);
-
-    //transiciones q4
-    transi1 = new Array<Transicion>();
-    transi1.push(new Transicion(automata.estados.get(4),automata.estados.get(4)));
-    automata.estados.get(4).transiciones.set("0",transi1);
-    automata.estados.get(4).transiciones.set("1",transi1);
-    console.log("YA ESTA HECHO EL AUTOMATA");
-    console.log("A PROBAR...");
-    console.log(automata.evaluar("100"));
   }
 
   render() {
@@ -205,8 +153,9 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
               <Picker
                 selectedValue={this.state.tipoAutomata}
                 style={{height: 50, width: 100}}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.setState({tipoAutomata: itemValue})
+                onValueChange={(itemValue, itemIndex) => {
+                  this.setState({tipoAutomata: itemValue});
+                  }
                 }>
                 <Picker.Item key={0} value={0} label={"DFA"} />
                 <Picker.Item key={1} value={1} label={"NFA"} />
