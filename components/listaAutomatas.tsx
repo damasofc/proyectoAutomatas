@@ -14,6 +14,9 @@ import firebase from 'react-native-firebase';
 import NavBar from './navbar';
 import { saveAutomataFB, getAutomata, getAutomatasList } from '../server/api';
 import ItemList from './itemListAutomata';
+import Automata from '../models/automata';
+import Estado from '../models/estado';
+import Transicion from '../models/transicion';
 
 type MyProps = {};
 
@@ -26,6 +29,7 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
     };
 
   }
+
 
   componentDidMount(){
       getAutomatasList((data:any) => {

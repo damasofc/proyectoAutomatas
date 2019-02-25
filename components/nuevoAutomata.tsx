@@ -113,7 +113,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       //guardar transiciones
       this.state.estados.forEach((value:any, key:number) => {
         value.forEach((valueVal:String, keyVal:String) => {
-          let transi = Array<Transicion>();
+          let transi = new Array<Transicion>();
           transi.push(new Transicion(x.estados.get(key),x.estados.get(this.getIdFromName(valueVal))));
           x.estados.get(key).transiciones.set(keyVal,transi);
         })
@@ -129,6 +129,49 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       );
       
     }
+  }
+
+  prueba(){
+    var automata:Automata = new Automata(null,"pruebaNFA",1);
+    automata.estados.set(1,new Estado(1,false,true));
+    automata.estados.set(2,new Estado(2,false,false));
+    automata.estados.set(3,new Estado(3,false,false));
+    automata.estados.set(4,new Estado(4,true,false));
+    //transiciones q1 con 0
+    let transi1 = new Array<Transicion>();
+    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(1)));
+    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(2)));
+    automata.estados.get(1).transiciones.set("0",transi1);
+    //transiciones q1 con 1
+    transi1 = new Array<Transicion>();
+    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(1)));
+    transi1.push(new Transicion(automata.estados.get(1),automata.estados.get(3)));
+    automata.estados.get(1).transiciones.set("1",transi1);
+
+    //transiciones q2 
+    transi1 = new Array<Transicion>();
+    transi1.push(new Transicion(automata.estados.get(2),automata.estados.get(4)));
+    automata.estados.get(2).transiciones.set("0",transi1);
+    transi1 = new Array<Transicion>();
+    transi1.push(new Transicion(automata.estados.get(2),automata.estados.get(2)));
+    automata.estados.get(2).transiciones.set("1",transi1);
+
+    //transiciones q3 
+    transi1 = new Array<Transicion>();
+    transi1.push(new Transicion(automata.estados.get(3),automata.estados.get(3)));
+    automata.estados.get(3).transiciones.set("0",transi1);
+    transi1 = new Array<Transicion>();
+    transi1.push(new Transicion(automata.estados.get(3),automata.estados.get(4)));
+    automata.estados.get(3).transiciones.set("1",transi1);
+
+    //transiciones q4
+    transi1 = new Array<Transicion>();
+    transi1.push(new Transicion(automata.estados.get(4),automata.estados.get(4)));
+    automata.estados.get(4).transiciones.set("0",transi1);
+    automata.estados.get(4).transiciones.set("1",transi1);
+    console.log("YA ESTA HECHO EL AUTOMATA");
+    console.log("A PROBAR...");
+    console.log(automata.evaluar("100"));
   }
 
   render() {
@@ -201,7 +244,8 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
               <Button title="Crear"
                 color="#841584"
                 onPress={() => {
-                  this.guardarAutomata();
+                  // this.guardarAutomata();
+                  this.prueba();
                 }}
               />
             

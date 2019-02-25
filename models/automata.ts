@@ -70,6 +70,45 @@ export default class Automata {
     }
 
     evaluar(palabra: String): boolean{
+        var res = false;
+        switch (this.tipo) {
+            case 0:
+                res = this.evaluarDFA(palabra);
+                break;
+            default:
+                res = this.evaluarNFA(palabra);
+                break;
+        }
+        return res;
+    }
+
+    evaluarNFA(palabra:String):boolean{
+        var state:any = this.getInitialState();
+        return this.evalNFA(state,palabra,0);
+    }
+
+    evalNFA(actual:Estado,palabra:String,posChar:number){
+        console.log(posChar);
+        if(posChar >= palabra.length){
+            if(actual.esFinal){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            let temp = actual.transiciones.get(palabra[posChar]);
+            if(temp != null){
+                for(let transiActual of temp){
+                    if(this.evalNFA(transiActual.stEnd,palabra,(posChar+1))){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    evaluarDFA(palabra:String):boolean{
         var x = 0;
         var state:any = this.getInitialState();
         var char = palabra.charAt(x);
@@ -78,7 +117,7 @@ export default class Automata {
             if(state == null)
             {
                 return false;
-            }7
+            }
             x++;
             char = palabra.charAt(x);
         }
