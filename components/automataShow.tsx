@@ -4,20 +4,21 @@ import Automata from '../models/automata';
 import Svg, {
     Line,
     Rect,Path,
-    Circle,Text
+    Circle,Text, Polyline
   } from 'react-native-svg';
 import { array } from 'prop-types';
 
 type MyProps = {automata: Automata};
 
-type MyState = {circleRadius:number};
+type MyState = {circleRadius:number,statesPos:Array<Array<number>>};
 
 export default class AutomatShow extends React.Component<MyProps, MyState> {
     constructor(props:any) {
       super(props)
     
       this.state = {
-         circleRadius:20
+         circleRadius:20,
+         statesPos: new Array<any>()
       }
 
       this.setStatesPositions = this.setStatesPositions.bind(this);
@@ -101,8 +102,14 @@ export default class AutomatShow extends React.Component<MyProps, MyState> {
                 }
             }
         }
-
+//debo revisar este setState
         this.setState({automata: automata});
+    }
+
+    getPosState(st:number){
+        let posX = this.props.automata.estados.get(st).posX;
+        let posY = this.props.automata.estados.get(st).posY;
+        return {x:posX,y:posY};
     }
 
     componentDidMount(){
@@ -121,7 +128,14 @@ export default class AutomatShow extends React.Component<MyProps, MyState> {
             height="95%"
             width="100%"
         >
-        {statesCircles.map((el,index) => {
+        <Polyline
+            points={`20,30 50,60`}
+            fill="none"
+            stroke="black"
+            strokeWidth="3"
+        />
+        {
+            statesCircles.map((el,index) => {
             let x = el.esFinal?<Circle
                     key={index}
                     cx= {el.posX+"%"}
@@ -138,7 +152,10 @@ export default class AutomatShow extends React.Component<MyProps, MyState> {
                 fill="pink"
             />
             return (
-            <View key={index}>
+            <View key={index} onLayout={event => {
+                const layout = event.nativeEvent.layout;
+
+            }}>
                 {el.esInicial? <Line x1={el.posX+50}
                                 y1={el.posY+"%"}
                                 x2={el.posX}

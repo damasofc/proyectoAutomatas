@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@ant-design/react-native": "^3.0.6",
+    "automata.js": "^0.2.1",
     "circular-json": "^0.5.9",
     "flatted": "^2.0.0",
     "json-circular-stringify": "0.0.1",
