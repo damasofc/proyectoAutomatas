@@ -29,7 +29,6 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
 
   componentDidMount(){
       getAutomatasList((data:any) => {
-        if(data !=)
         this.setState({
           automatas: data.reverse()
         })
