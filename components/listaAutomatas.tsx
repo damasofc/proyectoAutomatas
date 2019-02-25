@@ -47,7 +47,7 @@ export default class ListaAutomatas extends React.Component<MyProps, MyState> {
             <NavBar title={"Lista de Automatas"}/>
             <ScrollView style={styles.container}>
             {this.state.automatas.map((val,i) => {
-              return(<ItemList id={val.id} key={val.id} name={val.name} tipo={"s"}/>)
+              return(<ItemList id={val.id} key={val.id} name={val.name} tipo={val.tipo}/>)
             })}
             </ScrollView>
         </View>

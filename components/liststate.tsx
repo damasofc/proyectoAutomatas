@@ -62,6 +62,29 @@ export default class ListState extends React.Component<MyProps, MyState> {
         return x;
     }
 
+    getTransicionesOf(v:any){
+        var temp = this.state.transiciones.get(v);
+        var res = Array<any>();
+        if(temp != null){
+            temp.map((nameSt, id) => {
+            res.push(<Picker key={id}
+                selectedValue={this.state.transiciones.get(v)== null?1:this.state.transiciones.get(v)[id]}
+                style={{height: 50, width: 100}}
+                onValueChange={(itemValue, itemIndex) => {
+                    let x = this.state.transiciones;
+                    let arr = this.state.transiciones.get(v);
+                    arr[id] = itemValue;
+                    x.set(v,arr);
+                    this.setState({transiciones: x});
+                }}>
+                {this.statesAut()}
+            </Picker>);
+            })
+            return res;
+        }
+        return null;
+    }
+
     render(){
         return (
             <View style={styles.container}>
@@ -100,18 +123,7 @@ export default class ListState extends React.Component<MyProps, MyState> {
                             return (
                                     <View key={v+i} style={{flex:1, flexDirection: 'row'}}>
                                         <Text style={styles.subTitle}>{v}</Text>
-                                        <Picker
-                                            selectedValue={this.state.transiciones.get(v)== null?1:this.state.transiciones.get(v)[0]}
-                                            style={{height: 50, width: 100}}
-                                            onValueChange={(itemValue, itemIndex) => {
-                                                let x = this.state.transiciones;
-                                                let arr = this.state.transiciones.get(v);
-                                                arr[0] = itemValue;
-                                                x.set(v,arr);
-                                                this.setState({transiciones: x});
-                                            }}>
-                                            {this.statesAut()}
-                                        </Picker>
+                                        {this.getTransicionesOf(v)}
                                     </View>
                                 )
                         })}

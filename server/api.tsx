@@ -26,7 +26,7 @@ export  async function getAutomatasList(callback:any){
     firebase.database().ref('automatas').on('value',snapshot => {
         snapshot.forEach((element, i) => {
                 var x = JSON.parse(element._value);
-                res.push({id: conta,name: x.idName});
+                res.push({id: conta,name: x.idName,tipo:x.tipo});
                 conta++;
         });    
         callback(res);

@@ -108,7 +108,6 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
 
   guardarAutomata(){
     if(this.hasAlphabet() && this.hasFinalState() && this.state.automataName.length > 0){
-      //TODO:DONDE ESTA EL 0 debo editarlo por el tipo si es dfa, nfa
       var x:Automata = new Automata(null,this.state.automataName,this.getTipVal());
       this.state.estados.forEach((value:any, key:number) => {
         x.estados.set(key,new Estado(key,this.state.estadosFinales[key],this.isInitialState(key)));

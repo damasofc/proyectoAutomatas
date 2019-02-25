@@ -10,7 +10,7 @@ import AutomatShow from './automataShow';
 type MyProps = {
     id:number,
     name:string,
-    tipo:string
+    tipo:number
 };
 
 type MyState = {modalVisible:boolean,automat:any,palabra:string,automataVisible:boolean};
@@ -64,6 +64,14 @@ export default class ItemList extends React.Component<MyProps, MyState> {
     }
   }
 
+  getTipVal(){
+    if(this.props.tipo == 0){
+      return "DFA";
+    }else if(this.props.tipo == 1){
+      return "NFA";
+    }
+    return "NFA-e";
+  }
 
   componentDidMount(){
       
@@ -75,6 +83,7 @@ export default class ItemList extends React.Component<MyProps, MyState> {
           <View style={styles.container}>
             <Text style={styles.number}>{(this.props.id+1) + "."}</Text>
             <Text style={styles.name}>{this.props.name}</Text>
+            <Text style={styles.name}>{" ---- "+this.getTipVal()}</Text>
           </View>
           <View>
             <Button title="Mostrar"
