@@ -20,7 +20,7 @@ import { saveAutomataFB, getAutomata } from '../server/api';
 
 type MyProps = {};
 
-type MyState = {numbrStates: Number, alfabeto: Array<String>,automataName:String, 
+type MyState = {numbrStates: Number, alfabeto: Array<String>,automataName:String, tipoAutomata:String
   alfabetoString: String,estadoIni:String,estados:Map<number,any>,estadosFinales:Array<any>};
 export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   constructor(props: any) {
@@ -32,7 +32,8 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       estadoIni: 'Q0',
       estadosFinales: new Array(),
       estados: new Map(),
-      automataName: ''
+      automataName: '',
+      tipoAutomata: 'DFA'
     };
     this.saveTransiciones=this.saveTransiciones.bind(this);
   }
@@ -40,25 +41,18 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
   getListItems(){
     var x:Array<any> =  new Array();
     for (let index = 0; index < this.state.numbrStates; index++) {
-      x.push(<ListState id={index} guardarData={this.saveTransiciones} nmbrStates={this.state.numbrStates} key={"q"+index} title={"Q"+(index)} alfabeto={this.state.alfabeto} />);
+      x.push(<ListState id={index} tipoAuto={this.state.tipoAutomata} guardarData={this.saveTransiciones} nmbrStates={this.state.numbrStates} key={"q"+index} title={"Q"+(index)} alfabeto={this.state.alfabeto} />);
       
     }
     return x;
   }
 
-  saveTransiciones(id:number,transiciones:Map<String,String>,isFinal:boolean){
+  saveTransiciones(id:number,transiciones:Map<String,Array<String>>,isFinal:boolean){
     let st = this.state.estados;
     st.set(id,transiciones);
-    if(isFinal){
-      let estadosFin = this.state.estadosFinales;
-      estadosFin[id] = true;
-      this.setState({estados: st, estadosFinales:estadosFin});
-    }
-    else{
-      let estadosFin = this.state.estadosFinales;
-      estadosFin[id] = false;
-      this.setState({estados: st, estadosFinales:estadosFin});
-    }
+    var estadosFin = this.state.estadosFinales;
+    estadosFin[id] = isFinal;
+    this.setState({estados: st, estadosFinales:estadosFin});
   }
 
   getEstados(){
@@ -103,18 +97,29 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
     return x;
   }
 
+  getTipVal(){
+    if(this.state.tipoAutomata == "DFA"){
+      return 0;
+    }else if(this.state.tipoAutomata == "NFA"){
+      return 1;
+    }
+    return 2;
+  }
+
   guardarAutomata(){
     if(this.hasAlphabet() && this.hasFinalState() && this.state.automataName.length > 0){
       //TODO:DONDE ESTA EL 0 debo editarlo por el tipo si es dfa, nfa
-      var x:Automata = new Automata(null,this.state.automataName,0);
+      var x:Automata = new Automata(null,this.state.automataName,this.getTipVal());
       this.state.estados.forEach((value:any, key:number) => {
         x.estados.set(key,new Estado(key,this.state.estadosFinales[key],this.isInitialState(key)));
       });
       //guardar transiciones
       this.state.estados.forEach((value:any, key:number) => {
-        value.forEach((valueVal:String, keyVal:String) => {
+        value.forEach((array:Array<String>, keyVal:String) => {
           let transi = new Array<Transicion>();
-          transi.push(new Transicion(x.estados.get(key),x.estados.get(this.getIdFromName(valueVal))));
+          array.forEach(name => {
+            transi.push(new Transicion(x.estados.get(key),x.estados.get(this.getIdFromName(name))));
+          })
           x.estados.get(key).transiciones.set(keyVal,transi);
         })
       });
@@ -197,6 +202,20 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
             
             </View>
             <View style={{flex: 1, flexDirection: 'row'}}>
+              <Text>Tipo: </Text>
+              <Picker
+                selectedValue={this.state.tipoAutomata}
+                style={{height: 50, width: 100}}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.setState({tipoAutomata: itemValue})
+                }>
+                <Picker.Item key={0} value={0} label={"DFA"} />
+                <Picker.Item key={1} value={1} label={"NFA"} />
+                <Picker.Item key={2} value={2} label={"NFA-e"} />
+              </Picker>
+            
+            </View>
+            <View style={{flex: 1, flexDirection: 'row'}}>
               <Text>Estados: </Text>
               <Picker
                 selectedValue={this.state.numbrStates.toString()}
@@ -244,8 +263,7 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
               <Button title="Crear"
                 color="#841584"
                 onPress={() => {
-                  // this.guardarAutomata();
-                  this.prueba();
+                  this.guardarAutomata();
                 }}
               />
             

@@ -9,26 +9,28 @@ type MyProps = {title:String,
     alfabeto:Array<any>,
     id: number,
     nmbrStates: Number,
+    tipoAuto: String,
     guardarData: any};
 
-type MyState = {modalVisible: boolean,transiciones:Map<String,String>, isFinal:boolean};
+type MyState = {modalVisible: boolean,transiciones:Map<String,Array<String>>, isFinal:boolean};
 export default class ListState extends React.Component<MyProps, MyState> {
     constructor(props: any) {
       super(props);
       this.state = {
           modalVisible: false,
-          transiciones: new Map(),
+          transiciones: new Map<String,Array<String>>(),
           isFinal: false
       };
       this.props.guardarData(this.props.id,this.state.transiciones,this.state.isFinal);
     }
-
     componentDidUpdate(prevProps:any){
         if(prevProps.alfabeto !== this.props.alfabeto){
             let st = this.state.transiciones;
             this.props.alfabeto.forEach(v => {
                 if(v.length > 0){
-                    st.set(v,this.props.title);
+                    let arr = new Array<String>();
+                    arr.push(this.props.title);
+                    st.set(v,arr);
                 }
             });
             this.setState({transiciones: st});
@@ -40,7 +42,9 @@ export default class ListState extends React.Component<MyProps, MyState> {
         let st = this.state.transiciones;
         this.props.alfabeto.forEach(v => {
             if(v.length > 0){
-                st.set(v,this.props.title);
+                let arr = new Array<String>();
+                arr.push(this.props.title);
+                st.set(v,arr);
             }
         });
         this.setState({transiciones: st});
@@ -97,11 +101,13 @@ export default class ListState extends React.Component<MyProps, MyState> {
                                     <View key={v+i} style={{flex:1, flexDirection: 'row'}}>
                                         <Text style={styles.subTitle}>{v}</Text>
                                         <Picker
-                                            selectedValue={this.state.transiciones.get(v)}
+                                            selectedValue={this.state.transiciones.get(v)== null?1:this.state.transiciones.get(v)[0]}
                                             style={{height: 50, width: 100}}
                                             onValueChange={(itemValue, itemIndex) => {
                                                 let x = this.state.transiciones;
-                                                x.set(v,itemValue);
+                                                let arr = this.state.transiciones.get(v);
+                                                arr[0] = itemValue;
+                                                x.set(v,arr);
                                                 this.setState({transiciones: x});
                                             }}>
                                             {this.statesAut()}
