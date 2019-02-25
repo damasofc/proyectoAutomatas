@@ -105,19 +105,20 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
 
   guardarAutomata(){
     if(this.hasAlphabet() && this.hasFinalState() && this.state.automataName.length > 0){
-      var x:Automata = new Automata(null,this.state.automataName);
+      //TODO:DONDE ESTA EL 0 debo editarlo por el tipo si es dfa, nfa
+      var x:Automata = new Automata(null,this.state.automataName,0);
       this.state.estados.forEach((value:any, key:number) => {
         x.estados.set(key,new Estado(key,this.state.estadosFinales[key],this.isInitialState(key)));
       });
       //guardar transiciones
       this.state.estados.forEach((value:any, key:number) => {
         value.forEach((valueVal:String, keyVal:String) => {
-          x.estados.get(key).transiciones.set(keyVal,new Transicion(x.estados.get(key),x.estados.get(this.getIdFromName(valueVal))));
+          let transi = Array<Transicion>();
+          transi.push(new Transicion(x.estados.get(key),x.estados.get(this.getIdFromName(valueVal))));
+          x.estados.get(key).transiciones.set(keyVal,transi);
         })
       });
       saveAutomataFB(x);
-      // console.log(x.evaluar("000001"));
-      // console.log(x.evaluar("100001"));
       ToastAndroid.show('Automata guardado', ToastAndroid.LONG);
     }
     else{
@@ -128,10 +129,6 @@ export default class NuevoAutomata extends React.Component<MyProps, MyState> {
       );
       
     }
-  }
-
-  saveToFirebase(automata: Automata){
-    saveAutomataFB(automata);
   }
 
   render() {

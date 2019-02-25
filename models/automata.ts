@@ -1,17 +1,20 @@
 import Estado from './estado';
 import Transicion from './transicion';
 export default class Automata {
-    idName: String
+    idName: String;
+    tipo:number;//0 == DFA, 1 == NFA, 2 == NFA-e
     estados:Map<Number,Estado>;
-    constructor(obj: any,name:String = '') {
+    constructor(obj: any,name:String = '',tipo:number) {
         if(obj != null){
             this.idName = obj.idName;
             this.estados = new Map();
+            this.tipo = obj.tipo;
             this.createStatesFromData(obj);
             this.createTransitions(obj);
         }else{
             this.estados = new Map();
-            this.idName = name
+            this.idName = name;
+            this.tipo = tipo;
         }
     }
 
@@ -27,9 +30,17 @@ export default class Automata {
             let obej = data.estados[index];
             for(let m = 0; m < obej.transiciones.length;m++){
                 let transi = obej.transiciones[m];
-                this.estados.get(obej.nombre).transiciones.set(transi.val,new Transicion(this.estados.get(transi.init),this.estados.get(transi.end)));
+                this.estados.get(obej.nombre).transiciones.set(transi.val,this.getArrTransiciones(transi.transiciones));
             }
         }
+    }
+
+    getArrTransiciones(m:Array<any>){
+        var arrTransi = new Array<Transicion>();
+        for(let transi of m){
+            arrTransi.push(new Transicion(this.estados.get(transi.init),this.estados.get(transi.end)));
+        }
+        return arrTransi;
     }
 
     getInitialState() {
@@ -44,6 +55,7 @@ export default class Automata {
     convertAutomata2String(){
         let lo = {
             idName: this.idName,
+            tipo: this.tipo,
             estados: this.convertStates2Json(this.estados)
         }
         return JSON.stringify(lo);
@@ -79,7 +91,7 @@ export default class Automata {
     getNextState(actual:Estado,char:String){
         var nxState = actual.transiciones.get(char);
         if(nxState != null){
-            return nxState.stEnd;
+            return nxState[0].stEnd;
         }
         return null;
     }
