@@ -64,6 +64,43 @@ export default class AutomatShow extends React.Component<MyProps, MyState> {
                 }
             }    
         }
+        else if(i > 5){
+            let tem = i % 3
+            let col = i / 3;
+            if(tem == 1){
+                automata.estados.get(index).posX = 20 + (45);
+                automata.estados.get(index).posY = 20;
+                let temporalCheck3 = 3;
+                let posYAll = 40;
+                let m = 0;
+                for (let index = 0; index < this.props.automata.estados.size; index++) {
+                    if(temporalCheck3 == 0){
+                        posYAll+= 20;
+                        temporalCheck3 = 0;
+                        m = 0;
+                    }
+                    automata.estados.get(index).posX = 20 + (m*30);
+                    automata.estados.get(index).posY = posYAll;
+                    temporalCheck3 = temporalCheck3-1;
+                    m++;
+                }    
+            }else{
+                let temporalCheck3 = 3;
+                let posYAll = 20;
+                let m = 0;
+                for (let index = 0; index < this.props.automata.estados.size; index++) {
+                    if(temporalCheck3 == 0){
+                        posYAll+= 20;
+                        temporalCheck3 = 0;
+                        m = 0;
+                    }
+                    automata.estados.get(index).posX = 20 + (m*30);
+                    automata.estados.get(index).posY = posYAll;
+                    temporalCheck3 = temporalCheck3-1;
+                    m++;
+                }
+            }
+        }
 
         this.setState({automata: automata});
     }
